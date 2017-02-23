@@ -1,27 +1,29 @@
-"== New =="
+set nocompatible
+filetype off
 let mapleader = "\<Space>"
 filetype plugin indent off
 
-" set the runtime path for vundle
+" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
-
-" start vundle environment
 call vundle#begin()
 
-" list of plugins {{{2
-" let Vundle manage Vundle (this is required)
-" to install a plugin add it here and run :PluginInstall.
-Plugin 'gmarik/Vundle.vim'
-Plugin 'bling/vim-airline'
-Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'leafgarland/typescript-vim'
 
 call vundle#end()
+filetype plugin indent on    " required
+
+" typescript syntax highlighting
+au BufRead,BufNewFile *.ts   setfiletype typescript
 
 " leader w saves
 nnoremap <Leader>w :w<CR>
 
 " leader x saves and quits
 nnoremap <Leader>x :x<CR>
+execute pathogen#infect()
+
+nmap gm :LivedownToggle<CR>
 
 " Move around vim window splits with space as leader
 noremap <leader>h :wincmd h<CR>
@@ -29,7 +31,6 @@ noremap <leader>j :wincmd j<CR>
 noremap <leader>k :wincmd k<CR>
 noremap <leader>l :wincmd l<CR>
 
-"set title
 nnoremap ' `
 nnoremap ` '
 set history=1000
@@ -40,7 +41,6 @@ set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set backupskip=/tmp/*,/private/tmp/*
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set writebackup
-execute pathogen#infect()
 
 " Tmux
 if exists('$TMUX')
@@ -68,25 +68,6 @@ else
   map <C-l> <C-w>l
 endif
 
-"== Plugin Configs =="
-set statusline=%{fugitive#statusline()}
-set mouse=a
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:airline_powerline_fonts = 1
-let NERDTreeShowHidden=1
-
-" Opening vim by itself launches nerdtree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" control n brings up nerdtree
-map <C-n> :NERDTreeToggle<CR>
-" close NERDTree if only pane left
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-
 "== Appearance =="
 set term=screen-256color
 syntax enable
@@ -107,6 +88,7 @@ set shiftwidth=4
 
 "== Searching =="
 set showmatch       " Show matching brackets.
+set nohlsearch      " Don't continue to highlight searched phrases
 set ignorecase      " searches are case insensitive
 set incsearch       " find next match while typing
 set hlsearch        " highlight matches
@@ -115,14 +97,13 @@ set hlsearch        " highlight matches
 set ttyfast         " we have a fast terminal
 set showcmd
 set noerrorbells    " don't whine
-set noswapfile      " how annoying are these? / what is source control?
-set autoread        " automatically reloads file if there's alterations
+set autoread        " automatically reloads file if external alterations
 set nocompatible
 filetype off
 filetype plugin indent on
 
 "== Editing =="
-set backspace=indent,eol,start  " allow deletion in insertion mode (lazy :~) )
+set backspace=indent,eol,start  " backspace in insert mode, naughty!
 set shiftround          " when at 3 spaces, and I hit > ... go to 4, not 5
 
 "== Auto Commands =="
@@ -133,5 +114,4 @@ autocmd CursorHold * checktime  " execute checktime when no key is pressed (norm
 "== Swap ; w/ : =="
 nnoremap ; :
 nnoremap : ;
-
 
