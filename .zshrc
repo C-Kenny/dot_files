@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/home/carl/.oh-my-zsh
+export ZSH=/Users/bob/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -10,21 +10,21 @@ export ZSH=/home/carl/.oh-my-zsh
 # of those I like, located at /home/carl/liked_themes.txt
 
 # get line count of liked_themes
-LIKED_THEMES_FILE_LENGTH=$(wc -l < /home/carl/liked_themes.txt)
+LIKED_THEMES_FILE_LENGTH=$(wc -l < /Users/bob/liked_themes.txt)
 
 random_index=$[ RANDOM % LIKED_THEMES_FILE_LENGTH ]
 let random_index+=1
 
 # get n'th line to be used for ZSH theme
 sed_arg='p'
-ZSH_THEME=$(sed -n "$random_index$sed_arg" < /home/carl/liked_themes.txt)
+ZSH_THEME=$(sed -n "$random_index$sed_arg" < /Users/bob/liked_themes.txt)
 
 alias reload='source ~/.zshrc'
 alias notes="vim ~/Documents/work/notes.txt"
 alias g='git'
 alias ga='git add '
 alias gb='git branch '
-alias gc='git commit'
+alias gc='git commit -v'  # shows git diff in text editor when adding message
 alias gd='git diff'
 
 alias weather="curl -4 wttr.in/Christchurch"
@@ -69,19 +69,21 @@ source $HOME/.aliases
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
-# Colourize man
-man() {
-	env \
-		LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-		LESS_TERMCAP_md=$(printf "\e[1;31m") \
-		LESS_TERMCAP_me=$(printf "\e[0m") \
-		LESS_TERMCAP_se=$(printf "\e[0m") \
-		LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-		LESS_TERMCAP_ue=$(printf "\e[0m") \
-		LESS_TERMCAP_us=$(printf "\e[1;32m") \
-			man "$@"
-}
-
 xclip="xclip -selection c"
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PATH="$PATH:/usr/home/bin"
+
+# Setup shared history amongst terminal windows
+export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+export HISTSIZE=100000                   # big big history
+export HISTFILESIZE=100000               # big big history
+
+# Save and reload the history after each command finishes
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+# generate AWS codes e.g. mfa aws-bob
+# where mfa file is in ~/.aws/aws-bob.mfa
+function mfa () {
+       oathtool --base32 --totp "$(cat ~/.aws/$1.mfa)" ;
+        }
